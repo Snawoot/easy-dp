@@ -15,7 +15,6 @@ ensure_deps() {
     fi
   done
 }
-
 ensure_deps curl
 
 # Install dumbproxy
@@ -36,3 +35,7 @@ dp_download_url="https://github.com/SenseUnit/dumbproxy/releases/latest/download
 
 curl --no-progress-meter -Lo /usr/local/bin/dumbproxy "$dp_download_url"
 chmod +x /usr/local/bin/dumbproxy
+
+
+# Install myip
+# 
