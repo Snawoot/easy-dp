@@ -104,7 +104,7 @@ acme.sh --install-cert \
   --key-file /etc/dumbproxy/key.pem \
   --fullchain-file /etc/dumbproxy/fullchain.pem
 
-cat <<<EOF
+cat <<EOF
 
 =========================
 Installation is finished!
