@@ -98,7 +98,7 @@ acme.sh --issue \
   --alpn \
   --force \
   --pre-hook "systemctl stop dumbproxy || true" \
-  --post-hook "systemctl restart dumbproxy || true" \
+  --post-hook "[ -e /etc/dumbproxy/cert.pem -a -e /etc/dumbproxy/fullchain.pem ] && systemctl stop dumbproxy || true" \
   --server letsencrypt \
   --certificate-profile shortlived \
   --days 3
@@ -107,7 +107,8 @@ acme.sh --install-cert \
   -d "$ext_ip" \
   --cert-file /etc/dumbproxy/cert.pem \
   --key-file /etc/dumbproxy/key.pem \
-  --fullchain-file /etc/dumbproxy/fullchain.pem
+  --fullchain-file /etc/dumbproxy/fullchain.pem \
+  --reloadcmd "systemctl restart dumbproxy"
 
 cat <<EOF
 
