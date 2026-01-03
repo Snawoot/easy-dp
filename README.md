@@ -2,8 +2,6 @@
 
 A shell script to deploy [dumbproxy](https://github.com/SenseUnit/dumbproxy) on Linux in one run.
 
-Work in progress.
-
 ## Highlights
 
 * TLS with IP-address certificates from Let's Encrypt
@@ -11,4 +9,6 @@ Work in progress.
 
 # Usage
 
-Download, make it executable and run!
+```sh
+curl https://raw.githubusercontent.com/Snawoot/easy-dp/refs/heads/master/easy-dp.sh | bash -s
+```
