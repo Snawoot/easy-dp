@@ -40,7 +40,7 @@ chmod +x /usr/local/bin/dumbproxy
 
 mkdir -p /etc/dumbproxy
 
-passwd="$(tr -cd '[:alnum:]' < /dev/urandom | dd bs=1 count=10 2>/dev/null)"
+passwd="$(tr -cd '[:alnum:]' < /dev/urandom | dd bs=1 count=10 2>/dev/null || true)"
 /usr/local/bin/dumbproxy -passwd /etc/dumbproxy/passwd "auto" "${passwd}"
 
 cat > /etc/dumbproxy/dumbproxy.cfg <<EOF
