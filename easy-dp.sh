@@ -19,7 +19,7 @@ ensure_deps curl tar gzip
 
 mkdir -p /usr/local/bin
 
-# Install dumbproxy
+# Install or update dumbproxy
 #
 declare -A dp_arch_map=(
   ["x86_64"]="amd64"
@@ -39,10 +39,14 @@ curl --no-progress-meter -Lo /usr/local/bin/dumbproxy "$dp_download_url"
 chmod +x /usr/local/bin/dumbproxy
 
 
-# Install myip
+# Install or update myip
 # 
 myip_download_url="https://github.com/Snawoot/myip/releases/latest/download/myip.linux-${dp_arch_map[$arch]}"
 curl --no-progress-meter -Lo /usr/local/bin/myip "$myip_download_url"
 chmod +x /usr/local/bin/myip
 
+# External IP address discovery
+#
 ext_ip="$(/usr/local/bin/myip)"
+
+
