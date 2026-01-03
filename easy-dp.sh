@@ -70,6 +70,7 @@ LimitNOFILE=20000
 WantedBy=default.target
 EOF
 systemctl daemon-reload
+systemctl enable dumbproxy
 
 # Install or update myip
 # 
@@ -94,7 +95,7 @@ acme.sh --issue \
   --alpn \
   --force \
   --pre-hook "systemctl stop dumbproxy || true" \
-  --pre-hook "systemctl restart dumbproxy || true" \
+  --post-hook "systemctl restart dumbproxy || true" \
   --server letsencrypt \
   --certificate-profile shortlived \
   --days 3
