@@ -110,7 +110,7 @@ cat <<EOF
 Installation is finished!
 =========================
 
-Proxy URL: https://${ext_ip}:443
+Proxy URL: https://auto:${passwd}@${ext_ip}:443
 
 which is
 
