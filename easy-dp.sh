@@ -98,7 +98,7 @@ acme.sh --issue \
   --alpn \
   --force \
   --pre-hook "systemctl stop dumbproxy || true" \
-  --post-hook "[ -e /etc/dumbproxy/cert.pem -a -e /etc/dumbproxy/fullchain.pem ] && systemctl stop dumbproxy || true" \
+  --post-hook "[ -e /etc/dumbproxy/cert.pem -a -e /etc/dumbproxy/fullchain.pem ] && systemctl restart dumbproxy || true" \
   --server letsencrypt \
   --certificate-profile shortlived \
   --days 3
