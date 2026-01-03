@@ -7,7 +7,9 @@ A shell script to deploy [dumbproxy](https://github.com/SenseUnit/dumbproxy) on 
 * TLS with IP-address certificates from Let's Encrypt
 * Simple password-based authorization
 
-# Usage
+![Screenshot](https://github.com/user-attachments/assets/a80ff08c-c417-4666-9d11-d75e80e94e51)
+
+## Usage
 
 ```sh
 curl https://raw.githubusercontent.com/Snawoot/easy-dp/refs/heads/master/easy-dp.sh | bash -s
