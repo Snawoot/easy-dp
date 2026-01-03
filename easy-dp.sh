@@ -38,6 +38,37 @@ dp_download_url="https://github.com/SenseUnit/dumbproxy/releases/latest/download
 curl --no-progress-meter -Lo /usr/local/bin/dumbproxy "$dp_download_url"
 chmod +x /usr/local/bin/dumbproxy
 
+mkdir -p /etc/dumbproxy
+
+cat > /etc/dumbproxy/dumbproxy.cfg <<EOF
+auth basicfile://?path=/etc/dumbproxy/passwd
+bind-address :443
+cert /etc/dumbproxy/fullchain.pem
+key /etc/dumbproxy/key.pem
+EOF
+
+# TODO: populate password database
+
+cat > /etc/systemd/system/dumbproxy.service <<'EOF'
+[Unit]
+Description=Dumb Proxy
+Documentation=https://github.com/SenseUnit/dumbproxy/
+After=network.target network-online.target
+Requires=network-online.target
+
+[Service]
+User=root
+Group=root
+ExecStart=/usr/local/bin/dumbproxy -config /etc/dumbproxy/dumbproxy.cfg
+TimeoutStopSec=5s
+PrivateTmp=true
+ProtectSystem=full
+LimitNOFILE=20000
+
+[Install]
+WantedBy=default.target
+EOF
+systemctl daemon-reload
 
 # Install or update myip
 # 
@@ -55,7 +86,19 @@ curl --no-progress-meter -Lo /usr/local/bin/acme.sh 'https://raw.githubuserconte
 chmod +x /usr/local/bin/acme.sh
 /usr/local/bin/acme.sh --install-cronjob
 
-# Configure acme.sh
+# Issue certificate
 #
-/usr/local/bin/acme.sh --set-default-ca --server letsencrypt
-/usr/local/bin/acme.sh --register-account
+acme.sh --issue \
+  -d "$ext_ip" \
+  --alpn \
+  --pre-hook "systemctl stop dumbproxy || true" \
+  --pre-hook "systemctl restart dumbproxy || true" \
+  --server letsencrypt \
+  --certificate-profile shortlived \
+  --days 3
+
+acme.sh --install-cert \
+  -d "$ext_ip" \
+  --cert-file /etc/dumbproxy/cert.pem \
+  --key-file /etc/dumbproxy/key.pem \
+  --fullchain-file /etc/dumbproxy/fullchain.pem
