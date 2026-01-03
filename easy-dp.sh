@@ -15,7 +15,7 @@ ensure_deps() {
     fi
   done
 }
-ensure_deps curl openssl tr
+ensure_deps curl openssl tr mktemp install
 
 mkdir -p /usr/local/bin
 
@@ -34,9 +34,10 @@ declare -A dp_arch_map=(
   ["armhf"]="arm"
 )
 dp_download_url="https://github.com/SenseUnit/dumbproxy/releases/latest/download/dumbproxy.linux-${dp_arch_map[$arch]}"
-
-curl --no-progress-meter -Lo /usr/local/bin/dumbproxy "$dp_download_url"
-chmod +x /usr/local/bin/dumbproxy
+tmp="$(mktemp)"
+curl --no-progress-meter -Lo "$tmp" "$dp_download_url"
+install "$tmp" /usr/local/bin/dumbproxy
+rm "$tmp" || true
 
 mkdir -p /etc/dumbproxy
 
@@ -75,8 +76,10 @@ systemctl enable dumbproxy
 # Install or update myip
 # 
 myip_download_url="https://github.com/Snawoot/myip/releases/latest/download/myip.linux-${dp_arch_map[$arch]}"
-curl --no-progress-meter -Lo /usr/local/bin/myip "$myip_download_url"
-chmod +x /usr/local/bin/myip
+tmp="$(mktemp)"
+curl --no-progress-meter -Lo "$tmp" "$myip_download_url"
+install "$tmp" /usr/local/bin/myip
+rm "$tmp" || true
 
 # External IP address discovery
 #
