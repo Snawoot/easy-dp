@@ -86,7 +86,7 @@ ext_ip="$(/usr/local/bin/myip)"
 #
 curl --no-progress-meter -Lo /usr/local/bin/acme.sh 'https://raw.githubusercontent.com/acmesh-official/acme.sh/refs/heads/master/acme.sh'
 chmod +x /usr/local/bin/acme.sh
-/usr/local/bin/acme.sh --install-cronjob
+/usr/local/bin/acme.sh --install-cronjob || true
 
 # Issue certificate
 #
