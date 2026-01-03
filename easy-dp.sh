@@ -15,7 +15,7 @@ ensure_deps() {
     fi
   done
 }
-ensure_deps curl tar gzip
+ensure_deps curl openssl grep
 
 mkdir -p /usr/local/bin
 
@@ -49,4 +49,13 @@ chmod +x /usr/local/bin/myip
 #
 ext_ip="$(/usr/local/bin/myip)"
 
+# Install acme.sh
+#
+curl --no-progress-meter -Lo /usr/local/bin/acme.sh 'https://raw.githubusercontent.com/acmesh-official/acme.sh/refs/heads/master/acme.sh'
+chmod +x /usr/local/bin/acme.sh
+/usr/local/bin/acme.sh --install-cronjob
 
+# Configure acme.sh
+#
+/usr/local/bin/acme.sh --set-default-ca --server letsencrypt
+/usr/local/bin/acme.sh --register-account
