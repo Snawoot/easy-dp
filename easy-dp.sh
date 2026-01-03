@@ -92,6 +92,7 @@ chmod +x /usr/local/bin/acme.sh
 acme.sh --issue \
   -d "$ext_ip" \
   --alpn \
+  --force \
   --pre-hook "systemctl stop dumbproxy || true" \
   --pre-hook "systemctl restart dumbproxy || true" \
   --server letsencrypt \
