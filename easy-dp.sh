@@ -116,6 +116,7 @@ Proxy URL: https://auto:${passwd}@${ext_ip}:443
 which is
 
 Proxy protocol: https
+Proxy port:     443
 Proxy host:     ${ext_ip}
 Proxy user:     auto
 Proxy password: ${passwd}
