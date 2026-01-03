@@ -2,7 +2,7 @@
 
 # halt on any error for safety and proper pipe handling
 set -euo pipefail ; # <- this semicolon and comment make options apply
-# even when script is corrupt by CRLF line terminators (issue #75)
+# even when script is corrupt by CRLF line terminators
 # empty line must follow this comment for immediate fail with CRLF newlines
 
 arch="$(uname -m)"
@@ -15,7 +15,9 @@ ensure_deps() {
     fi
   done
 }
-ensure_deps curl
+ensure_deps curl tar gzip
+
+mkdir -p /usr/local/bin
 
 # Install dumbproxy
 #
@@ -39,3 +41,8 @@ chmod +x /usr/local/bin/dumbproxy
 
 # Install myip
 # 
+myip_download_url="https://github.com/Snawoot/myip/releases/latest/download/myip.linux-${dp_arch_map[$arch]}"
+curl --no-progress-meter -Lo /usr/local/bin/myip "$myip_download_url"
+chmod +x /usr/local/bin/myip
+
+ext_ip="$(/usr/local/bin/myip)"
