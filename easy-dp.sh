@@ -15,7 +15,7 @@ ensure_deps() {
     fi
   done
 }
-ensure_deps curl openssl grep
+ensure_deps curl openssl tr
 
 mkdir -p /usr/local/bin
 
@@ -40,14 +40,15 @@ chmod +x /usr/local/bin/dumbproxy
 
 mkdir -p /etc/dumbproxy
 
+passwd="$(tr -cd '[:alnum:]' < /dev/urandom | dd bs=1 count=10 2>/dev/null)"
+/usr/local/bin/dumbproxy -passwd /etc/dumbproxy/passwd "auto" "${passwd}"
+
 cat > /etc/dumbproxy/dumbproxy.cfg <<EOF
 auth basicfile://?path=/etc/dumbproxy/passwd
 bind-address :443
 cert /etc/dumbproxy/fullchain.pem
 key /etc/dumbproxy/key.pem
 EOF
-
-# TODO: populate password database
 
 cat > /etc/systemd/system/dumbproxy.service <<'EOF'
 [Unit]
@@ -102,3 +103,20 @@ acme.sh --install-cert \
   --cert-file /etc/dumbproxy/cert.pem \
   --key-file /etc/dumbproxy/key.pem \
   --fullchain-file /etc/dumbproxy/fullchain.pem
+
+cat <<<EOF
+
+=========================
+Installation is finished!
+=========================
+
+Proxy URL: https://${ext_ip}:443
+
+which is
+
+Proxy protocol: https
+Proxy host:     ${ext_ip}
+Proxy user:     auto
+Proxy password: ${passwd}
+
+EOF
