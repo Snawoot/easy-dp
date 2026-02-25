@@ -70,7 +70,6 @@ LimitNOFILE=20000
 [Install]
 WantedBy=default.target
 EOF
-systemctl daemon-reload
 systemctl enable dumbproxy
 
 # Install or update myip
@@ -89,7 +88,37 @@ ext_ip="$(/usr/local/bin/myip)"
 #
 curl --no-progress-meter -Lo /usr/local/bin/acme.sh 'https://raw.githubusercontent.com/acmesh-official/acme.sh/refs/heads/master/acme.sh'
 chmod +x /usr/local/bin/acme.sh
-/usr/local/bin/acme.sh --install-cronjob || true
+
+# Install systemd timer renewing certs
+#
+cat > /etc/systemd/system/acme.sh.service <<'EOF'
+[Unit]
+Description=Renew ACME-issued certificates using acme.sh
+After=network-online.target nss-lookup.target
+
+[Service]
+Environment="NO_TIMESTAMP=1"
+Type=oneshot
+SyslogIdentifier=acme.sh
+ExecStart=/usr/local/bin/acme.sh --cron --home "/root/.acme.sh"
+EOF
+
+cat > /etc/systemd/system/acme.sh.timer <<'EOF'
+[Unit]
+Description=Daily renewal of ACME-issued certificates
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+systemctl daemon-reload
+systemctl enable acme.sh.timer
+systemctl start acme.sh.timer
 
 # Issue certificate
 #
